@@ -1,0 +1,21 @@
+using darwin
+    : 6
+    : /opt/local/bin/c++-mp-6
+    ;
+
+using darwin
+    : 5
+    : /opt/local/bin/c++-mp-5
+    ;
+
+using boost
+    : 1.62
+    ; 
+
+import os ;
+
+local boost_root_folder = [ os.environ BOOST_BUILD_PATH ] ;
+
+constant boost_include_path
+    : $(boost_root_folder)
+    ;

@@ -130,6 +130,21 @@
 ;; sets timestamp each time a task is DONE
 (setq org-log-done t)
 
+;; org-babel config
+;; org babel belongs to org mode
+;; it enables org mode to embedd programming languages
+;; add plantuml to org-babel languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((plantuml . t)))
+;; path to my plantuml jar file
+(setq org-plantuml-jar-path
+  (expand-file-name "~/projects/programming/plantuml/plantuml.jar"))
+;; add dot to org-babel languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((dot . t)))
+
 ;; iedit
 (require 'iedit)
 ;; C-; does not work on mac as key binding

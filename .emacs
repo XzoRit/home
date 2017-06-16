@@ -37,6 +37,7 @@
                           ox-reveal
                           powerline
                           projectile
+                          plantuml-mode
                           scala-mode
                           swiper-helm
                           use-package

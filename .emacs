@@ -126,6 +126,14 @@
 ;; meta + arrow keys to navigate between windows
 (windmove-default-keybindings 'meta)
 
+;; plantuml-mode
+(require 'plantuml-mode)
+;; set path to plantuml.jar file
+;; note plantuml.jar uses graphviz dot for creating pictures
+;; it searches in /usr/bin but if GRAPHVIZ_DOT is set
+;; as an environment variable it uses that dot executeable
+(setq plantuml-jar-path "~/projects/programming/plantuml/plantuml.jar")
+
 ;; org-mode config
 (global-set-key (kbd "C-c l") 'org-store-link)
 ;; sets timestamp each time a task is DONE

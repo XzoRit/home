@@ -616,7 +616,7 @@ Git gutter:
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
- '(custom-enabled-themes (quote (tsdh-dark)))
+ '(custom-enabled-themes (quote (deeper-blue)))
  '(git-gutter:added-sign ">")
  '(git-gutter:deleted-sign "<")
  '(git-gutter:lighter " GG")
@@ -624,7 +624,8 @@ Git gutter:
  '(git-gutter:update-interval 2)
  '(package-selected-packages
    (quote
-    (dumb-jump helm-ag use-package flycheck flycheck-irony helm-projectile company-irony-c-headers undo-tree helm-gtags company-irony irony hydra ace-window swiper-helm yasnippet scala-mode powerline ox-reveal ox-asciidoc magit lua-mode jam-mode iedit haskell-mode graphviz-dot-mode go-mode d-mode cider alchemist adoc-mode)))
+    (plantuml-mode dumb-jump helm-ag use-package flycheck flycheck-irony helm-projectile company-irony-c-headers undo-tree helm-gtags company-irony irony hydra ace-window swiper-helm yasnippet scala-mode powerline ox-reveal ox-asciidoc magit lua-mode jam-mode iedit haskell-mode graphviz-dot-mode go-mode d-mode cider alchemist adoc-mode)))
+ '(projectile-mode t nil (projectile))
  '(safe-local-variable-values (quote ((projectile-project-name . "chrono_date")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

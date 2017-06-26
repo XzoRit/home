@@ -142,17 +142,14 @@
 ;; org-babel config
 ;; org babel belongs to org mode
 ;; it enables org mode to embedd programming languages
-;; add plantuml to org-babel languages
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((plantuml . t)))
+ '((C . t)
+   (dot . t)
+   (plantuml . t)))
 ;; path to my plantuml jar file
 (setq org-plantuml-jar-path
   (expand-file-name "~/projects/programming/plantuml/plantuml.jar"))
-;; add dot to org-babel languages
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((dot . t)))
 
 ;; iedit
 (require 'iedit)
@@ -283,6 +280,9 @@
 (setq git-gutter:lighter " GG")
 ;; enable git gutter globally
 (global-git-gutter-mode)
+;; update diff infor every n-seconds
+(custom-set-variables
+ '(git-gutter:update-interval 2))
 
 ;; avy
 (require 'avy)

@@ -69,6 +69,9 @@ export BOOST_BUILD_PATH="/Users/Tobi/projects/programming/c++/boost"
 # set graphviz dot executeable var
 export GRAPHVIZ_DOT="/opt/local/bin/dot"
 
+# add env var which points to gradle home dir
+export GRADLE_HOME="/opt/local/share/java/gradle"
+
 # contains symbol databases for widely use c++-libs
 export GTAGSLIBPATH=$HOME/.gtags/
 

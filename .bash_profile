@@ -69,6 +69,9 @@ export BOOST_BUILD_PATH="/Users/Tobi/projects/programming/c++/boost"
 # set graphviz dot executeable var
 export GRAPHVIZ_DOT="/opt/local/bin/dot"
 
+# contains symbol databases for widely use c++-libs
+export GTAGSLIBPATH=$HOME/.gtags/
+
 # MacPorts Installer addition on 2014-12-20_at_17:09:32: adding an appropriate PATH variable for use with MacPorts.
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
 # Finished adapting your PATH environment variable for use with MacPorts.

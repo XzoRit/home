@@ -250,7 +250,7 @@
 ;; powerline
 (require 'powerline)
 ;; my powerline theme
-(powerline-default-theme)
+(powerline-vim-theme)
 
 ;; graphviz-mode
 (require 'graphviz-dot-mode)

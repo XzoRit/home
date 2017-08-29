@@ -369,6 +369,8 @@
 (require 'hydra)
 ;; here are my little hydra functions
 ;; needed for splitter movement
+;; and introduces all the examples from
+;; hydra-examples.el
 (require 'hydra-examples)
 (defhydra xzr:hydra-window ()
 "

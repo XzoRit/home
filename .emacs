@@ -136,9 +136,15 @@
 
 ;; org-mode config
 (global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c c") 'org-agenda)
 ;; sets timestamp each time a task is DONE
 (setq org-log-done t)
-
+;; here are my org files to be considered
+;; when an agenda view is requested
+(setq org-agenda-files (quote ("~/org")))
+;; use that hydra from the hydra-examples file to change
+;; the different view modes of an agenda
+(define-key org-agenda-mode-map "v" 'hydra-org-agenda-view/body)
 ;; org-babel config
 ;; org babel belongs to org mode
 ;; it enables org mode to embedd programming languages

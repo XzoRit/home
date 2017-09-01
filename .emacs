@@ -137,8 +137,10 @@
 ;; org-mode config
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c c") 'org-agenda)
-;; sets timestamp each time a task is DONE
-(setq org-log-done t)
+;; sets timestamp and enter a note each time a task is DONE
+(setq org-log-done 'note)
+;; Insert state change notes and time stamps into logbook drawer
+(setq org-log-into-drawer t)
 ;; here are my org files to be considered
 ;; when an agenda view is requested
 (setq org-agenda-files (quote ("~/org")))

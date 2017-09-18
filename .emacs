@@ -144,6 +144,15 @@
 ;; here are my org files to be considered
 ;; when an agenda view is requested
 (setq org-agenda-files (quote ("~/org")))
+;; when moving/copying an entry consider all org-agenda files
+;; as possible targets
+(setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
+;; file names are shown as refile targets
+(setq org-refile-use-outline-path 'file)
+;; ask for confirmation if a node is refiled with an unknown parent node
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+;; this makes helm completion work for org-refile
+(setq org-outline-path-complete-in-steps nil)
 ;; use that hydra from the hydra-examples file to change
 ;; the different view modes of an agenda
 (define-key org-agenda-mode-map "v" 'hydra-org-agenda-view/body)

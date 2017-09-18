@@ -12,6 +12,7 @@
                           alchemist
                           avy
                           cider
+                          color-theme
                           clojure-mode
                           company-irony
                           company-irony-c-headers

@@ -130,6 +130,15 @@
 ;; meta + arrow keys to navigate between windows
 (windmove-default-keybindings 'meta)
 
+;; hydra
+;; I require hydra and its example functions here
+;; because some of the functions are helpful
+;; for configuring other modes like org
+;; the available examples functions can be found in hydra-examples.el
+(require 'hydra)
+(setq hydra-examples-verbatim t)
+(require 'hydra-examples)
+
 ;; plantuml-mode
 (require 'plantuml-mode)
 ;; set path to plantuml.jar file
@@ -139,6 +148,8 @@
 (setq plantuml-jar-path "~/projects/programming/plantuml/plantuml.jar")
 
 ;; org-mode config
+;; needed so agenda mode map is visible
+(require 'org-agenda)
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c c") 'org-agenda)
 ;; sets timestamp and enter a note each time a task is DONE
@@ -386,13 +397,7 @@
 ;; use helm for showing possible matches
 (setq dumb-jump-selector 'helm)
 
-;; hydra
-(require 'hydra)
-;; here are my little hydra functions
-;; needed for splitter movement
-;; and introduces all the examples from
-;; hydra-examples.el
-(require 'hydra-examples)
+;; here are my hydra functions
 (defhydra xzr:hydra-window ()
 "
 Movement^^      ^Split^            ^Switch^        ^Resize^

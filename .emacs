@@ -12,8 +12,8 @@
                           alchemist
                           avy
                           cider
-                          color-theme
                           clojure-mode
+                          color-theme
                           company-irony
                           company-irony-c-headers
                           d-mode
@@ -24,11 +24,13 @@
                           fringe-helper
                           git-gutter-fringe
                           go-mode
+                          graphviz-dot-mode
                           haskell-mode
                           helm
                           helm-gtags
                           helm-projectile
                           helm-swoop
+                          htmlize
                           hydra
                           iedit
                           irony
@@ -36,11 +38,12 @@
                           move-text
                           ox-asciidoc
                           ox-reveal
+                          plantuml-mode
                           powerline
                           projectile
-                          plantuml-mode
                           scala-mode
                           swiper-helm
+                          undo-tree
                           use-package
                           yasnippet
                           ))

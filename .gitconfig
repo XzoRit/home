@@ -2,6 +2,8 @@
 	name = XzoRit
 	email = xzorit@hotmail.com
 [core]
-	excludesfile = /Users/Tobi/.gitignore_global
+	excludesfile = $HOME/.gitignore_global
 [push]
 	default = simple
+[color]
+  ui = auto

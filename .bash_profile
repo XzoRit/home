@@ -59,12 +59,12 @@ export HISTSIZE=100
 shopt -s histappend
 
 # add rtags to path
-export PATH="$PATH:/Users/Tobi/projects/programming/rtags/build/bin"
+export PATH="$PATH:$HOME/projects/programming/rtags/build/bin"
 
 # add b2 for executing boost.build scripts
-export PATH="$PATH:/Users/Tobi/projects/programming/c++/boost"
+export PATH="$PATH:$HOME/projects/programming/c++/boost"
 # directory where boost.build resides
-export BOOST_BUILD_PATH="/Users/Tobi/projects/programming/c++/boost"
+export BOOST_BUILD_PATH="$HOME/projects/programming/c++/boost"
 
 # set graphviz dot executeable var
 export GRAPHVIZ_DOT="/opt/local/bin/dot"

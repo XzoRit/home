@@ -58,6 +58,9 @@ export HISTSIZE=100
 # append to bash_history if terminal quits
 shopt -s histappend
 
+# add python utilities (e.g. pytest) installed via pip to path
+export PATH="$PATH:/opt/local/Library/Frameworks/Python.framework/Versions/3.6/bin"
+
 # add rtags to path
 export PATH="$PATH:$HOME/projects/programming/rtags/build/bin"
 

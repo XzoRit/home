@@ -19,6 +19,7 @@
                           d-mode
                           dumb-jump
                           elixir-mode
+                          elpy
                           flycheck
                           flycheck-irony
                           fringe-helper
@@ -396,6 +397,11 @@
 (dumb-jump-mode)
 ;; use helm for showing possible matches
 (setq dumb-jump-selector 'helm)
+
+;; elpy
+;; python ide package
+;; https://elpy.readthedocs.io/en/latest/index.html
+(elpy-enable)
 
 ;; here are my hydra functions
 (defhydra xzr:hydra-window ()

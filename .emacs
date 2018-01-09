@@ -2,7 +2,7 @@
 (require 'package)
 ;; I need the marmalade archive
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 (package-initialize)
 ;; packages which I always like to have installed
 (defvar xzr:my-packages '(

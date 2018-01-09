@@ -278,7 +278,7 @@
 ;; ox-reveal
 (require 'ox-reveal)
 ;; where is reveal.js?
-(setq org-reveal-root "file:////Users/Tobi/projects/programming/reveal_js/reveal.js")
+(setq org-reveal-root "file:////Users/.../projects/programming/reveal.js")
 
 ;; powerline
 (require 'powerline)

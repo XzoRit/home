@@ -377,6 +377,8 @@
 ;; - building a project
 ;; - ...
 (require 'projectile)
+;; set prefix keyboard shortcut for projectile commands
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 ;; helm as completion backend for projectile
 (setq projectile-completion-system 'helm)
 ;; some more helmified projectile functions

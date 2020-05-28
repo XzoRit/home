@@ -1,3 +1,12 @@
+# sort files recursively by size biggest to smallest
+# find ./ -type f -name '*.o' -printf '%s\t\t%p\n' | sort -rn
+
+# sort files recursively by size biggest to smallest
+# including accumulated size of directories
+# du -ah ./ | sort -rh
+
+# see list of symbols within an lib-, exe-, object-file(s)
+# nm -CglS --size-sort --defined-only <libs,exes,objs,...>
 
 # Normal Colors
 Black='\e[0;30m'        # Black
@@ -34,21 +43,6 @@ NC="\e[m"               # Color Reset
 # prompt
 PS1="${Green}\w${NC}\n> "
 
-# dir listing
-alias ll="ls -laFG"
-
-# wifi networking
-alias wifi_off="networksetup -setairportpower en0 off"
-alias wifi_on="networksetup -setairportpower en0 on"
-alias wifi_list="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport scan"
-wifi_join() {
-    networksetup -setairportnetwork en0 $1 $2
-}
-alias wifi_name="networksetup -listallhardwareports"
-
-# emacs
-alias emacs_gui="nohup /Applications/Emacs.app/Contens/MacOs/Emacs"
-
 # history handling
 #
 # erase dublicates
@@ -58,31 +52,47 @@ export HISTSIZE=100
 # append to bash_history if terminal quits
 shopt -s histappend
 
-# add python utilities (e.g. pytest) installed via pip to path
-export PATH="$PATH:/opt/local/Library/Frameworks/Python.framework/Versions/3.6/bin"
-
-# add rtags to path
-export PATH="$PATH:$HOME/projects/programming/rtags/build/bin"
-
 # add b2 for executing boost.build scripts
-export PATH="$PATH:$HOME/projects/programming/c++/boost"
-# directory where boost.build resides
-export BOOST_BUILD_PATH="$HOME/projects/programming/c++/boost"
+if [ -d "$HOME/projects/programming/boost_build" ] ; then
+    PATH="$HOME/projects/programming/boost_build:$PATH"
+fi
 
-# set graphviz dot executeable var
-export GRAPHVIZ_DOT="/opt/local/bin/dot"
+# path to the boost-build.jam for finding the jam-code that implements the build system
+export BOOST_BUILD_PATH="$HOME/projects/programming/boost_build"
 
-# add env var which points to gradle home dir
-export GRADLE_HOME="/opt/local/share/java/gradle"
+export BOOST_ROOT="$HOME/projects/programming/boost"
 
-# contains symbol databases for widely use c++-libs
-export GTAGSLIBPATH=$HOME/.gtags/
+# pip install executeables here, so add it to the path var
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
 
-# MacPorts Installer addition on 2014-12-20_at_17:09:32: adding an appropriate PATH variable for use with MacPorts.
-export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-# Finished adapting your PATH environment variable for use with MacPorts.
+# eerie is io's package manager
+# Make sure to update your shell's environment variables before using Eerie.
+# Here's a sample code you could use:
+# Eerie config
+if [ -d "$HOME/.eerie" ] ; then
+    EERIEDIR="$HOME/.eerie"
+    PATH=$PATH:$EERIEDIR/base/bin:$EERIEDIR/activeEnv/bin
+    export EERIEDIR PATH
+fi
 
-# Ensure that user .bash_profiles point back to .bashrc
-if [ -f ${HOME}/.bashrc ]; then
-    . ${HOME}/.bashrc
+# makes vpkg command complation available for bash
+source ~/projects/programming/vcpkg/scripts/vcpkg_completion.bash
+
+# sets environment such that the nix-packagemanager can work
+source ~/.nix-profile/etc/profile.d/nix.sh
+
+# make rust-tools like cargo, rustup, rustc available
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# make swift tooling available
+# this takes precedance over my installed tools
+# like all the clang-family tools
+# and I do not think that I want that
+# export PATH="$HOME/projects/programming/swift/usr/bin:$PATH"
+
+# all my bash aliases are here
+if [ -f ${HOME}/.bash_aliases ]; then
+    . ${HOME}/.bash_aliases
 fi

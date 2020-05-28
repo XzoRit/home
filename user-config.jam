@@ -1,21 +1,39 @@
-using darwin
-    : 6
-    : /opt/local/bin/c++-mp-6
+using clang
+    : 9
+    : /usr/bin/clang++-9
+    : <cxxflags>-std=c++17
     ;
 
-using darwin
-    : 5
-    : /opt/local/bin/c++-mp-5
+using clang
+    : 8
+    : /usr/bin/clang++-8
+    : <cxxflags>-std=c++17
+    ;
+
+using clang
+    : 7
+    : /usr/bin/clang++-7
+    : <cxxflags>-std=c++17
+    ;
+
+using gcc
+    : 9
+    : /usr/bin/g++-9
+    : <cxxflags>-std=c++17
+    ;
+
+using gcc
+    : 8
+    : /usr/bin/g++-8
+    : <cxxflags>-std=c++17
+    ;
+
+using gcc
+    : 7
+    : /usr/bin/g++-7
+    : <cxxflags>-std=c++17
     ;
 
 using boost
-    : 1.62
-    ; 
-
-import os ;
-
-local boost_root_folder = [ os.environ BOOST_BUILD_PATH ] ;
-
-constant boost_include_path
-    : $(boost_root_folder)
+    : 1.72
     ;

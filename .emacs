@@ -42,9 +42,6 @@ There are two things you can do about this warning:
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
-(add-to-list 'default-frame-alist '(fullscreen . fullboth))
-; (load-theme 'wheatgrass t)
-; (load-theme 'leuven t)
 
 (add-to-list 'default-frame-alist '(font . "Jetbrains Mono-10"))
 
@@ -245,6 +242,10 @@ Git gutter:
   (global-set-key (kbd "C-c p") 'xzr:hydra-projectile/body)
   )
 
+(use-package rust-mode
+  :ensure t
+  )
+
 (setq lsp-keymap-prefix "C-c l")
 
 (use-package lsp-mode
@@ -252,6 +253,7 @@ Git gutter:
   :hook (
          (c++-mode . lsp)
          (c-mode . lsp)
+         (rust-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration)
          )
   :commands lsp
@@ -279,6 +281,11 @@ Git gutter:
   :ensure t
   :commands
   lsp-treemacs-errors-list
+  :bind
+  (:map global-map
+        ("C-c t t"   . treemacs)
+        ("C-c t 0"   . treemacs-select-window)
+        )
   )
 
 (use-package company
@@ -326,21 +333,25 @@ Git gutter:
 
 (use-package all-the-icons
   :ensure t
-  :config
-  (all-the-icons-install-fonts)
   )
 
 (use-package doom-themes
   :ensure t
   :config
-  (load-theme 'doom-one t)
+  ; dark
+  ; (load-theme 'doom-one t)
+  (load-theme 'doom-gruvbox t)
+  ; (load-theme 'wheatgrass t)
+  ; light
+  ; (load-theme 'doom-one-light t)
+  ; (load-theme 'doom-acario-light t)
+  ; (load-theme 'leuven t)
   )
 
 (use-package doom-modeline
   :ensure t
-  :after
   :init
-  (doom-modeline-mode 1)
+  (doom-modeline-mode t)
   )
 
 ;;; .emacs ends here

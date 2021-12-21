@@ -43,6 +43,7 @@ There are two things you can do about this warning:
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))
 (add-to-list 'default-frame-alist '(font . "Jetbrains Mono-10"))
 
 (setq-default indent-tabs-mode nil)
@@ -86,6 +87,19 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "M-h") 'backward-kill-word)
 
+;; tab-bar-mode
+(tab-bar-mode t)
+;; make highlighted tab stand out a bit more
+(set-face-attribute 'tab-bar-tab nil
+                    :inherit 'doom-modeline-panel
+                    :foreground nil
+                    :background nil)
+;; take projectile project name as tab name
+(defun xzr:tab-bar-tab-name-function ()
+  "Name tab by project name from projectile as default."
+  (projectile-project-name))
+(setq tab-bar-tab-name-function #'xzr:tab-bar-tab-name-function)
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
@@ -94,9 +108,11 @@ There are two things you can do about this warning:
    (plantuml . t)
    )
  )
-(setq org-plantuml-jar-path
-      (expand-file-name xzr:plantuml-jar-path)
-      )
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (setq doom-modeline-icon t))))
 
 (use-package hydra
   :ensure t
@@ -124,6 +140,20 @@ There are two things you can do about this warning:
    )
   )
 
+(use-package avy
+  :ensure t
+  :config
+  (defhydra xzr:hydra-avy (:color teal :columns 4)
+    "avy"
+    ("c" avy-goto-char "avy-goto-char")
+    ("t" avy-goto-char-timer "avy-goto-char-timer")
+    ("l" avy-goto-line "avy-goto-line")
+    ("w" avy-goto-word-1 "avy-goto-word-1")
+    )
+
+  (global-set-key (kbd "C-c j") 'xzr:hydra-avy/body)
+  )
+
 (use-package ace-window
   :ensure t
   :bind
@@ -134,6 +164,52 @@ There are two things you can do about this warning:
   :ensure t
   :config
   (global-undo-tree-mode)
+  )
+
+(use-package multiple-cursors
+  :ensure t
+  :config
+    (defhydra xzr:hydra-multiple-cursors (:color teal :columns 4)
+    "multiple-cursors"
+    ("a" mc/mark-next-like-this "Adds a cursor and region at the next part of the buffer forwards that matches the current region.")
+    )
+
+  (global-set-key (kbd "C-c m") 'xzr:hydra-multiple-cursors/body)
+  )
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook #'yas-minor-mode)
+  )
+
+(use-package yasnippet-snippets
+  :ensure t
+  )
+
+(use-package helm-c-yasnippet
+  :ensure t
+  :config
+  (setq helm-yas-space-match-any-greedy t)
+  (defhydra xzr:hydra-helm-yas (:color teal)
+    "helm-yas"
+    ("c" helm-yas-complete "helm-yas-complete")
+    ("v" helm-yas-visit-snippet-file "helm-yas-visit-snippet-file")
+    ("n" helm-yas-create-snippet-on-region "helm-yas-create-snippet-on-region")
+    )
+
+  (global-set-key (kbd "C-c y") 'xzr:hydra-helm-yas/body)
+  )
+
+(use-package yaml-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+  )
+
+(use-package json-mode
+  :ensure t
   )
 
 (use-package magit
@@ -246,13 +322,26 @@ Git gutter:
   :ensure t
   )
 
-(setq lsp-keymap-prefix "C-c l")
+(use-package clojure-mode
+  :ensure t
+  )
 
+(use-package cmake-mode
+  :ensure t
+  )
+
+(setq lsp-keymap-prefix (kbd "C-c l"))
 (use-package lsp-mode
   :ensure t
+  :config
+  (setq lsp-headerline-breadcrumb-enable nil)
   :hook (
          (c++-mode . lsp)
          (c-mode . lsp)
+         (cmake-mode . lsp)
+         (clojure-mode . lsp)
+         (clojurec-mode . lsp)
+         (clojurescript-mode . lsp)
          (rust-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration)
          )
@@ -288,18 +377,27 @@ Git gutter:
         )
   )
 
+(use-package dap-mode
+  :ensure t
+  )
+
 (use-package company
   :ensure t
-  :init
-  (add-hook 'after-init-hook 'global-company-mode)
-  :config
-  (setq company-minimum-prefix-length 1)
-  (setq company-idle-delay 0.2)
-  )
+  :after lsp-mode
+  :hook (prog-mode . company-mode)
+  :bind (:map company-active-map
+              ("<tab>" . company-complete-selection)
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous))
+        (:map lsp-mode-map
+         ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.2))
 
 (use-package flycheck
   :ensure t
-  :init
+  :config
   (global-flycheck-mode)
   )
 
@@ -338,19 +436,22 @@ Git gutter:
 (use-package doom-themes
   :ensure t
   :config
+  (setq doom-monokai-classic-brighter-comments t)
+  (setq doom-monokai-classic-comment-bg t)
   ; dark
-  ; (load-theme 'doom-one t)
-  (load-theme 'doom-gruvbox t)
-  ; (load-theme 'wheatgrass t)
+  ;(load-theme 'doom-monokai-classic t)
+  ;(load-theme 'doom-one t)
+  (load-theme 'doom-peacock t)
+  ;(load-theme 'wheatgrass t)
   ; light
-  ; (load-theme 'doom-one-light t)
-  ; (load-theme 'doom-acario-light t)
-  ; (load-theme 'leuven t)
+  ;(load-theme 'doom-one-light t)
+  ;(load-theme 'doom-acario-light t)
+  ;(load-theme 'leuven t)
   )
 
 (use-package doom-modeline
   :ensure t
-  :init
+  :config
   (doom-modeline-mode t)
   )
 

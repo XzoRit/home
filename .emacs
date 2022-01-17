@@ -39,18 +39,34 @@ There are two things you can do about this warning:
 (defvar xzr:reveal-js-root
   "file:///home/xzr/projects/programming/reveal.js")
 
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
 (add-to-list 'default-frame-alist '(font . "Jetbrains Mono-10"))
 
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tab-bar-mode t)
+;; make highlighted tab stand out a bit more
+(set-face-attribute 'tab-bar-tab nil
+                    :inherit 'doom-modeline-panel
+                    :foreground nil
+                    :background nil)
+;; take projectile project name as tab name
+(defun xzr:tab-bar-tab-name-function ()
+  "Name tab by project name from projectile as default."
+  (projectile-project-name))
+(setq tab-bar-tab-name-function #'xzr:tab-bar-tab-name-function)
+
+(show-paren-mode t)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
-
-(add-to-list 'auto-mode-alist '("\\.ipp\\'" . c++-mode))
 
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
@@ -87,19 +103,6 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "M-h") 'backward-kill-word)
 
-;; tab-bar-mode
-(tab-bar-mode t)
-;; make highlighted tab stand out a bit more
-(set-face-attribute 'tab-bar-tab nil
-                    :inherit 'doom-modeline-panel
-                    :foreground nil
-                    :background nil)
-;; take projectile project name as tab name
-(defun xzr:tab-bar-tab-name-function ()
-  "Name tab by project name from projectile as default."
-  (projectile-project-name))
-(setq tab-bar-tab-name-function #'xzr:tab-bar-tab-name-function)
-
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
@@ -118,26 +121,41 @@ There are two things you can do about this warning:
   :ensure t
   )
 
-(use-package which-key
+(use-package all-the-icons
   :ensure t
-  :config
-  (which-key-mode)
   )
 
-(use-package helm
+(use-package doom-themes
   :ensure t
-  :demand t
-  :bind
-  (
-   ("M-y"                               . helm-show-kill-ring)
-   ("C-x b"                             . helm-mini)
-   ([remap find-file]                   . helm-find-files)
-   ([remap occur]                       . helm-occur)
-   ([remap list-buffers]                . helm-buffers-list)
-   ([remap dabbrev-expand]              . helm-dabbrev)
-   ([remap execute-extended-command]    . helm-M-x)
-   ([remap apropos-command]             . helm-apropos)
-   )
+  :custom
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t)
+  (doom-gruvbox-brighter-comments t)
+  (doom-gruvbox-dark-variant "hard")
+  :config
+  (doom-themes-org-config)
+  (load-theme 'doom-gruvbox t)
+  )
+
+(use-package doom-modeline
+  :ensure t
+  :config
+  (doom-modeline-mode t)
+  )
+
+(use-package which-key
+  :ensure t
+  :custom
+  (which-key-popup-type 'side-window)
+  (which-key-side-window-location 'top)
+  (which-key-side-window-max-width 1.0)
+  (which-key-side-window-max-height 0.25)
+  (which-key-idle-delay 1.0)
+  (which-key-idle-secondary-delay 0.1)
+  (which-key-separator ": " )
+  (which-key-unicode-correction 2)
+  :config
+  (which-key-mode)
   )
 
 (use-package avy
@@ -156,6 +174,8 @@ There are two things you can do about this warning:
 
 (use-package ace-window
   :ensure t
+  :init
+  (setq aw-background nil)
   :bind
   ("C-c a" . ace-select-window)
   )
@@ -166,42 +186,6 @@ There are two things you can do about this warning:
   (global-undo-tree-mode)
   )
 
-(use-package multiple-cursors
-  :ensure t
-  :config
-    (defhydra xzr:hydra-multiple-cursors (:color teal :columns 4)
-    "multiple-cursors"
-    ("a" mc/mark-next-like-this "Adds a cursor and region at the next part of the buffer forwards that matches the current region.")
-    )
-
-  (global-set-key (kbd "C-c m") 'xzr:hydra-multiple-cursors/body)
-  )
-
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode)
-  )
-
-(use-package yasnippet-snippets
-  :ensure t
-  )
-
-(use-package helm-c-yasnippet
-  :ensure t
-  :config
-  (setq helm-yas-space-match-any-greedy t)
-  (defhydra xzr:hydra-helm-yas (:color teal)
-    "helm-yas"
-    ("c" helm-yas-complete "helm-yas-complete")
-    ("v" helm-yas-visit-snippet-file "helm-yas-visit-snippet-file")
-    ("n" helm-yas-create-snippet-on-region "helm-yas-create-snippet-on-region")
-    )
-
-  (global-set-key (kbd "C-c y") 'xzr:hydra-helm-yas/body)
-  )
-
 (use-package yaml-mode
   :ensure t
   :config
@@ -210,6 +194,69 @@ There are two things you can do about this warning:
 
 (use-package json-mode
   :ensure t
+  )
+
+(use-package rust-mode
+  :ensure t
+  )
+
+(use-package clojure-mode
+  :ensure t
+  )
+
+(use-package cmake-mode
+  :ensure t
+  )
+
+(use-package plantuml-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist
+               '("\\.puml\\'" . plantuml-mode)
+               )
+  (setq plantuml-jar-path
+        (expand-file-name xzr:plantuml-jar-path))
+  (setq plantuml-default-exec-mode
+        'jar)
+  )
+
+(use-package graphviz-dot-mode
+  :ensure t
+  :config
+  (setq graphviz-dot-indent-width 4)
+  )
+
+(setq lsp-keymap-prefix (kbd "C-c l"))
+(use-package lsp-mode
+  :ensure t
+  :after
+  (which-key)
+  :custom
+  (lsp-headerline-breadcrumb-enable nil)
+  :hook (
+         (c++-mode . lsp)
+         (c-mode . lsp)
+         (cmake-mode . lsp)
+         (clojure-mode . lsp)
+         (clojurec-mode . lsp)
+         (clojurescript-mode . lsp)
+         (rust-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration)
+         )
+  :commands lsp
+  )
+
+(use-package ox-reveal
+  :ensure t
+  :config
+  (setq org-reveal-root
+        xzr:reveal-js-root)
+  )
+
+(use-package flycheck
+  :ensure t
+  :config
+  (global-flycheck-mode)
   )
 
 (use-package magit
@@ -263,196 +310,182 @@ Git gutter:
   :ensure t
   :config
   (projectile-mode +1)
-  (setq projectile-completion-system 'helm)
-  (defhydra xzr:hydra-projectile (:color teal :columns 4)
-    "projectile"
-    ("ESC" projectile-project-buffers-other-buffer           "project-buffers-other-buffer")
-    ("!"   projectile-run-shell-command-in-root              "run-shell-command-in-root")
-    ("&"   projectile-run-async-shell-command-in-root        "run-async-shell-command-in-root")
-    ("D"   projectile-dired                                  "dired")
-    ("E"   projectile-edit-dir-locals                        "edit-dir-locals")
-    ("F"   projectile-find-in-known-projects                 "find-file-in-known-projects")
-    ("I"   projectile-ibuffer                                "ibuffer")
-    ("P"   projectile-test-project                           "test-project")
-    ("R"   projectile-regenerate-tags                        "regenerate-tags")
-    ("S"   projectile-save-project-buffers                   "save-project-buffers")
-    ("T"   projectile-find-test-file                         "find-test-file")
-    ("V"   projectile-browse-dirty-projects                  "browse-dirty-projects")
-    ("a"   projectile-find-other-file                        "find-other-file")
-    ("b"   projectile-switch-to-buffer                       "switch-to-buffer")
-    ("c"   projectile-compile-project                        "compile-project")
-    ("d"   projectile-find-dir                               "find-dir")
-    ("e"   projectile-recentf                                "recentf")
-    ("f"   projectile-find-file                              "find-file")
-    ("g"   projectile-find-file-dwim                         "find-file-dwim")
-    ("i"   projectile-invalidate-cache                       "invalidate-cache")
-    ("j"   projectile-find-tag                               "find-tag")
-    ("k"   projectile-kill-buffers                           "kill-buffers")
-    ("l"   projectile-find-file-in-directory                 "find-file-in-directory")
-    ("m"   projectile-commander                              "commander")
-    ("o"   projectile-multi-occur                            "multi-occur")
-    ("p"   projectile-switch-project                         "switch-project")
-    ("q"   projectile-switch-open-project                    "switch-open-project")
-    ("r"   projectile-replace                                "replace")
-    ("t"   projectile-toggle-between-implementation-and-test "toggle-between-implementation-and-test")
-    ("u"   projectile-run-project                            "run-project")
-    ("v"   projectile-vc                                     "vc")
-    ("z"   projectile-cache-current-file                     "cache-current-file")
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  )
 
-    ("xe"  projectile-run-eshell "run-eshell")
-    ("xs"  projectile-run-shell  "run-shell")
-    ("xt"  projectile-run-term   "run-term")
+(use-package window-purpose
+  :ensure t
+  :init
+  :config
+  (purpose-mode)
+  (purpose-add-user-purposes :modes '(
+                                        ; edit
+                                      (c++-mode . cpp_edit)
+                                        ; terminal
+                                      (ansi-term-mode . terminal)
+                                      (bat-mode . terminal)
+                                      (compilation-mode . terminal)
+                                      (shell-mode . terminal)
+                                      (term-mode . terminal)
+                                        ; navigation
+                                      (dired-mode . navigation)
+                                      ))
 
-    ("sg"  projectile-grep "grep")
-    ("ss"  projectile-ag   "ag")
+  (defhydra xzr:hydra-purpose (:color blue :hint nil)
+    "
+purpose:
+    _l_: purpose-load-window-layout       _d_: purpose-toggle-window-purpose-dedicated
+    _s_: purpose-save-window-layout       _D_: purpose-toggle-window-buffer-dedicated
+    _r_: purpose-reset-window-layout      _p_: purpose-set-window-purpose
+    _L_: purpose-load-window-layout-file  _k_: purpose-delete-non-dedicated-windows
+    _S_: purpose-save-window-layout-file  _m_: purpose-mode
 
-    ("Oo"  projectile-display-buffer                           "display-buffer")
-    ("Oa"  projectile-find-other-file-other-window             "find-other-file-other-window")
-    ("Ob"  projectile-switch-to-buffer-other-window            "switch-to-buffer-other-window")
-    ("Od"  projectile-find-dir-other-window                    "find-dir-other-window")
-    ("Of"  projectile-find-file-other-window                   "find-file-other-window")
-    ("Og"  projectile-find-file-dwim-other-window              "find-file-dwim-other-window")
-    ("Ot"  projectile-find-implementation-or-test-other-window "find-implementation-or-test-other-window")
+    C-x b purpose-friendly-switch-buffer
+    C-u C-x b switch-buffer-without-purpose
+    C-u C-u C-x b purpose-switch-buffer-with-purpose
+"
+    ("m" purpose-mode)
+
+    ("l" purpose-load-window-layout)
+    ("s" purpose-save-window-layout)
+    ("r" purpose-reset-window-layout)
+    ("L" purpose-load-window-layout-file)
+    ("S" purpose-save-window-layout-file)
+
+    ("d" purpose-toggle-window-purpose-dedicated)
+    ("D" purpose-toggle-window-buffer-dedicated)
+    ("p" purpose-set-window-purpose)
+
+    ("k" purpose-delete-non-dedicated-windows)
     )
 
-  (global-set-key (kbd "C-c p") 'xzr:hydra-projectile/body)
+  (global-set-key (kbd "C-c v") 'xzr:hydra-purpose/body)
   )
 
-(use-package rust-mode
-  :ensure t
-  )
+(require 'window-purpose-x)
+(purpose-x-magit-single-on)
+(purpose-x-kill-setup)
 
-(use-package clojure-mode
-  :ensure t
-  )
-
-(use-package cmake-mode
-  :ensure t
-  )
-
-(setq lsp-keymap-prefix (kbd "C-c l"))
-(use-package lsp-mode
+(use-package vertico
   :ensure t
   :config
-  (setq lsp-headerline-breadcrumb-enable nil)
-  :hook (
-         (c++-mode . lsp)
-         (c-mode . lsp)
-         (cmake-mode . lsp)
-         (clojure-mode . lsp)
-         (clojurec-mode . lsp)
-         (clojurescript-mode . lsp)
-         (rust-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration)
-         )
-  :commands lsp
+  (vertico-mode)
+  (vertico-mouse-mode)
+  (vertico-reverse-mode)
   )
 
-(use-package lsp-ui
-    :ensure t
-    :commands
-    lsp-ui-mode
-    )
-
-(use-package company-lsp
+(use-package orderless
   :ensure t
-  :commands
-  company-lsp
-  )
-
-(use-package helm-lsp
-  :ensure t
-  :commands
-  helm-lsp-workspace-symbol
-  )
-
-(use-package lsp-treemacs
-  :ensure t
-  :commands
-  lsp-treemacs-errors-list
-  :bind
-  (:map global-map
-        ("C-c t t"   . treemacs)
-        ("C-c t 0"   . treemacs-select-window)
-        )
-  )
-
-(use-package dap-mode
-  :ensure t
-  )
-
-(use-package company
-  :ensure t
-  :after lsp-mode
-  :hook (prog-mode . company-mode)
-  :bind (:map company-active-map
-              ("<tab>" . company-complete-selection)
-              ("C-n" . company-select-next)
-              ("C-p" . company-select-previous))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
   :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.2))
+  (completion-styles
+   '(orderless)
+   )
+  )
 
-(use-package flycheck
+(use-package embark
   :ensure t
+  :bind
+  (("C-." . embark-act))
+  )
+
+(use-package marginalia
+  :ensure t
+  :bind
+  (("C-c m" . marginalia-cycle))
+  :init
+  (marginalia-mode)
+  )
+
+(use-package consult
+  :ensure t
+  :bind
+  (
+   ("M-y" . consult-yank-pop)
+   )
   :config
-  (global-flycheck-mode)
+  (consult-customize
+   consult-theme
+   :preview-key '(:debounce 0.5 any)
+   )
   )
 
-(use-package ox-reveal
+(use-package corfu
   :ensure t
-  :config
-  (setq org-reveal-root
-        xzr:reveal-js-root)
+  :init
+  (corfu-global-mode)
   )
 
-(use-package plantuml-mode
+(use-package cape
   :ensure t
-  :config
-  (add-to-list 'auto-mode-alist
-               '("\\.puml\\'" . plantuml-mode)
-               )
-  (setq plantuml-jar-path
-        (expand-file-name xzr:plantuml-jar-path))
-  (setq plantuml-default-exec-mode
-        'jar)
+  :init
+  (defhydra xzr:hydra-cape (:color red :hint nil)
+    "
+cape:
+    _k_: cape-keyword _p_: completion-at-point _t_: complete-tag
+    _a_: cape-abbrev  _d_: cape-dabbrev
+    _l_: cape-line    _f_: cape-file
+    _r_: cape-rfc1345 _s_: cape-symbol
+    _w_: cape-dict    _i_: cape-ispell
+    _&_: cape-sgml    _\\_: cape-tex
+"
+    ("p" completion-at-point)
+    ("t" complete-tag)
+    ("d" cape-dabbrev)
+    ("f" cape-file)
+    ("k" cape-keyword)
+    ("s" cape-symbol)
+    ("a" cape-abbrev)
+    ("i" cape-ispell)
+    ("l" cape-line)
+    ("w" cape-dict)
+    ("\\" cape-tex)
+    ("&" cape-sgml)
+    ("r" cape-rfc1345)
+    )
+  (global-set-key (kbd "C-c i") 'xzr:hydra-cape/body)
   )
 
-(use-package graphviz-dot-mode
+(use-package popper
   :ensure t
-  :config
-  (setq graphviz-dot-indent-width 4)
+  :init
+  (defhydra xzr:hydra-popper (:color blue :hint nil)
+    "
+popper:
+    _l_: popper-toggle-latest     _t_: popper-toggle-type
+    _k_: popper-kill-latest-popup _m_: popper-mode
+    _c_: popper-cycle             _e_: popper-echo-mode
+"
+    ("c" popper-cycle :color red)
+    ("l" popper-toggle-latest)
+    ("t" popper-toggle-type)
+    ("k" popper-kill-latest-popup)
+    ("m" popper-mode)
+    ("e" popper-echo-mode)
+    )
+
+  (global-set-key (kbd "C-c o") 'xzr:hydra-popper/body)
+
+  (setq popper-reference-buffers
+        '(
+          "\\*Async Shell Command\\*"
+          "\\*Backtrace\\*"
+          "\\*Flycheck Errors\\*"
+          "\\*Messages\\*"
+          "\\*Warnings\\*"
+          "\\*undo-tree\\*"
+          "\\*xref\\*"
+
+          "Apropos\\*$"
+          "Output\\*$"
+
+          "\\*git-gutter"
+          help-mode))
+  (setq popper-group-function #'popper-group-by-projectile)
+  (popper-mode +1)
+  (popper-echo-mode +1)
   )
 
-(use-package company-graphviz-dot
-  )
-
-(use-package all-the-icons
-  :ensure t
-  )
-
-(use-package doom-themes
-  :ensure t
-  :config
-  (setq doom-monokai-classic-brighter-comments t)
-  (setq doom-monokai-classic-comment-bg t)
-  ; dark
-  ;(load-theme 'doom-monokai-classic t)
-  ;(load-theme 'doom-one t)
-  (load-theme 'doom-peacock t)
-  ;(load-theme 'wheatgrass t)
-  ; light
-  ;(load-theme 'doom-one-light t)
-  ;(load-theme 'doom-acario-light t)
-  ;(load-theme 'leuven t)
-  )
-
-(use-package doom-modeline
-  :ensure t
-  :config
-  (doom-modeline-mode t)
-  )
+;; EXPERIMENTS
+;; mini-frame, shackle, straight
 
 ;;; .emacs ends here

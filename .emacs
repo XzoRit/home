@@ -29,73 +29,50 @@ There are two things you can do about this warning:
 ;; add org packages too
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
-;; This is only needed once, near the top of the file
-(eval-when-compile
-  (require 'use-package))
+;; bootstrap straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+(setq package-enable-at-startup nil)
+
+;; use-package
+(straight-use-package 'use-package)
+
+;; nano
+(straight-use-package
+ '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
+; mandatory
+(require 'nano-base-colors)
+(require 'nano-faces)
+
+; optional
+(require 'nano-defaults)
+(require 'nano-layout)
+(require 'nano-modeline)
+(require 'nano-theme)
 
 ;; variables used in this file
 (defvar xzr:plantuml-jar-path
   "~/projects/programming/plantuml/plantuml.jar")
 (defvar xzr:reveal-js-root
-  "file:///home/xzr/projects/programming/reveal.js")
+  "file:///home/projects/programming/reveal.js")
 
-(prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-
-(add-to-list 'default-frame-alist '(fullscreen . fullboth))
-(add-to-list 'default-frame-alist '(font . "Jetbrains Mono-10"))
-
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
 (tab-bar-mode t)
-;; make highlighted tab stand out a bit more
-(set-face-attribute 'tab-bar-tab nil
-                    :inherit 'doom-modeline-panel
-                    :foreground nil
-                    :background nil)
-;; take projectile project name as tab name
-(defun xzr:tab-bar-tab-name-function ()
-  "Name tab by project name from projectile as default."
-  (projectile-project-name))
-(setq tab-bar-tab-name-function #'xzr:tab-bar-tab-name-function)
-
 (show-paren-mode t)
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
-(add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
 
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
-
-;; set keys for apple keyboard, for emacs in osx
-;; make cmd key do meta
-(setq mac-command-modifier 'meta)
-;; make alt key do super
-(setq mac-option-modifier 'super)
-;; the right option modifier shall stay as it is
-;; for characters like @, ~, ...
-(setq mac-right-option-modifier 'none)
-;; make control key do control
-(setq mac-control-modifier 'control)
-;; make fn key do hyper
-(setq ns-function-modifier 'hyper)
-
-;; for emacs running on windows
-;; left windows key is super
-(setq w32-pass-lwindow-to-system nil)
-(setq w32-lwindow-modifier 'super)
-;; right windows key too
-(setq w32-pass-rwindow-to-system nil)
-(setq w32-rwindow-modifier 'super)
-;; menue key is hyper
-(setq w32-pass-apps-to-system nil)
-(setq w32-apps-modifier 'hyper)
 
 ;; C-h shall be delete char backwards
 ;; C-h is replaced with M-?
@@ -112,39 +89,27 @@ There are two things you can do about this warning:
    )
  )
 
-(if (daemonp)
-    (add-hook 'after-make-frame-functions
-              (lambda (frame)
-                (setq doom-modeline-icon t))))
-
 (use-package hydra
-  :ensure t
+  :straight t
   )
 
-(use-package all-the-icons
-  :ensure t
-  )
-
-(use-package doom-themes
-  :ensure t
-  :custom
-  (doom-themes-enable-bold t)
-  (doom-themes-enable-italic t)
-  (doom-gruvbox-brighter-comments t)
-  (doom-gruvbox-dark-variant "hard")
+(use-package mini-frame
+  :straight t
   :config
-  (doom-themes-org-config)
-  (load-theme 'doom-gruvbox t)
-  )
-
-(use-package doom-modeline
-  :ensure t
-  :config
-  (doom-modeline-mode t)
+  (mini-frame-mode)
+  (setq mini-frame-show-parameters
+        `((top . 0)
+          (left . 0.25)
+          (width . 1.0)
+          (height . 12)
+          (left-fringe . 12)
+          (right-fringe .12)
+          (child-frame-border-width . 0)
+          (internal-border-width . 0)))
   )
 
 (use-package which-key
-  :ensure t
+  :straight t
   :custom
   (which-key-popup-type 'side-window)
   (which-key-side-window-location 'top)
@@ -159,7 +124,7 @@ There are two things you can do about this warning:
   )
 
 (use-package avy
-  :ensure t
+  :straight t
   :config
   (defhydra xzr:hydra-avy (:color teal :columns 4)
     "avy"
@@ -173,7 +138,7 @@ There are two things you can do about this warning:
   )
 
 (use-package ace-window
-  :ensure t
+  :straight t
   :init
   (setq aw-background nil)
   :bind
@@ -181,35 +146,35 @@ There are two things you can do about this warning:
   )
 
 (use-package undo-tree
-  :ensure t
+  :straight t
   :config
   (global-undo-tree-mode)
   )
 
 (use-package yaml-mode
-  :ensure t
+  :straight t
   :config
   (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
   )
 
 (use-package json-mode
-  :ensure t
+  :straight t
   )
 
 (use-package rust-mode
-  :ensure t
+  :straight t
   )
 
 (use-package clojure-mode
-  :ensure t
+  :straight t
   )
 
 (use-package cmake-mode
-  :ensure t
+  :straight t
   )
 
 (use-package plantuml-mode
-  :ensure t
+  :straight t
   :config
   (add-to-list 'auto-mode-alist
                '("\\.puml\\'" . plantuml-mode)
@@ -221,14 +186,14 @@ There are two things you can do about this warning:
   )
 
 (use-package graphviz-dot-mode
-  :ensure t
+  :straight t
   :config
   (setq graphviz-dot-indent-width 4)
   )
 
 (setq lsp-keymap-prefix (kbd "C-c l"))
 (use-package lsp-mode
-  :ensure t
+  :straight t
   :after
   (which-key)
   :custom
@@ -246,25 +211,25 @@ There are two things you can do about this warning:
   :commands lsp
   )
 
-(use-package ox-reveal
-  :ensure t
-  :config
-  (setq org-reveal-root
-        xzr:reveal-js-root)
-  )
+;; (use-package ox-reveal
+;;   :straight t
+;;   :config
+;;   (setq org-reveal-root
+;;         xzr:reveal-js-root)
+;;   )
 
 (use-package flycheck
-  :ensure t
+  :straight t
   :config
   (global-flycheck-mode)
   )
 
 (use-package magit
-  :ensure t
+  :straight t
   )
 
 (use-package git-gutter
-  :ensure t
+  :straight t
   :config
   (global-git-gutter-mode t)
   (setq git-gutter:lighter " GG")
@@ -298,7 +263,7 @@ Git gutter:
   )
 
 (use-package clang-format+
-  :ensure t
+  :straight t
   :config
   (fset 'c-indent-region 'clang-format-region)
   :hook
@@ -307,14 +272,14 @@ Git gutter:
   )
 
 (use-package projectile
-  :ensure t
+  :straight t
   :config
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   )
 
 (use-package window-purpose
-  :ensure t
+  :straight t
   :init
   :config
   (purpose-mode)
@@ -366,8 +331,20 @@ purpose:
 (purpose-x-magit-single-on)
 (purpose-x-kill-setup)
 
+(straight-use-package '( vertico :files (:defaults "extensions/*")
+                         :includes (vertico-buffer
+                                    vertico-directory
+                                    vertico-flat
+                                    vertico-grid
+                                    vertico-indexed
+                                    vertico-mouse
+                                    vertico-multiform
+                                    vertico-quick
+                                    vertico-repeat
+                                    vertico-reverse
+                                    vertico-unobtrusive)))
 (use-package vertico
-  :ensure t
+  :straight t
   :config
   (vertico-mode)
   (vertico-mouse-mode)
@@ -375,7 +352,7 @@ purpose:
   )
 
 (use-package orderless
-  :ensure t
+  :straight t
   :custom
   (completion-styles
    '(orderless)
@@ -383,13 +360,13 @@ purpose:
   )
 
 (use-package embark
-  :ensure t
+  :straight t
   :bind
   (("C-." . embark-act))
   )
 
 (use-package marginalia
-  :ensure t
+  :straight t
   :bind
   (("C-c m" . marginalia-cycle))
   :init
@@ -397,7 +374,7 @@ purpose:
   )
 
 (use-package consult
-  :ensure t
+  :straight t
   :bind
   (
    ("M-y" . consult-yank-pop)
@@ -410,13 +387,13 @@ purpose:
   )
 
 (use-package corfu
-  :ensure t
+  :straight t
   :init
   (corfu-global-mode)
   )
 
 (use-package cape
-  :ensure t
+  :straight t
   :init
   (defhydra xzr:hydra-cape (:color red :hint nil)
     "
@@ -446,7 +423,7 @@ cape:
   )
 
 (use-package popper
-  :ensure t
+  :straight t
   :init
   (defhydra xzr:hydra-popper (:color blue :hint nil)
     "
@@ -484,8 +461,5 @@ popper:
   (popper-mode +1)
   (popper-echo-mode +1)
   )
-
-;; EXPERIMENTS
-;; mini-frame, shackle, straight
 
 ;;; .emacs ends here

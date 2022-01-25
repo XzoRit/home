@@ -5,31 +5,13 @@
 
 ;;; Code:
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  (when no-ssl
-    (warn "\
-Your version of Emacs does not support SSL connections,
-which is unsafe because it allows man-in-the-middle attacks.
-There are two things you can do about this warning:
-1. Install an Emacs version that does support SSL and be safe.
-2. Remove this warning from your init file so you won't see it again."))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
-;; add org packages too
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+;; Initialize package sources
+(require 'package)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
-;; bootstrap straight.el
+;; straight
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -42,7 +24,6 @@ There are two things you can do about this warning:
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
-(setq package-enable-at-startup nil)
 
 ;; use-package
 (straight-use-package 'use-package)
@@ -50,21 +31,21 @@ There are two things you can do about this warning:
 ;; nano
 (straight-use-package
  '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
-; mandatory
-(require 'nano-base-colors)
-(require 'nano-faces)
-
-; optional
-(require 'nano-defaults)
 (require 'nano-layout)
-(require 'nano-modeline)
+;(require 'nano-theme-light)
+(require 'nano-theme-dark)
+(require 'nano-faces)
+(nano-faces)
 (require 'nano-theme)
+(nano-theme)
+(require 'nano-defaults)
+(require 'nano-modeline)
 
 ;; variables used in this file
 (defvar xzr:plantuml-jar-path
-  "~/projects/programming/plantuml/plantuml.jar")
+  "~/a/b/c/plantuml/plantuml.jar")
 (defvar xzr:reveal-js-root
-  "file:///home/projects/programming/reveal.js")
+  "file:///a/b/c/reveal.js")
 
 (tab-bar-mode t)
 (show-paren-mode t)

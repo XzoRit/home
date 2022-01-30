@@ -61,6 +61,12 @@
 (global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "M-h") 'backward-kill-word)
 
+;; center cursor when scrolling
+(setq scroll-preserve-screen-position t
+      scroll-conservatively 0
+      maximum-scroll-margin 0.5
+      scroll-margin 99999)
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(

@@ -112,6 +112,8 @@
 
 (use-package visual-fill-column
   :straight t
+  :bind
+  ("C-c f" . visual-fill-column-mode)
   :init
   (setq-default visual-fill-column-width 80)
   (setq-default visual-fill-column-center-text t)

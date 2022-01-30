@@ -134,8 +134,9 @@
 
 (use-package ace-window
   :straight t
-  :init
-  (setq aw-background nil)
+  :custom
+  (aw-background nil)
+  (aw-dispatch-always t)
   :bind
   ("C-c a" . ace-select-window)
   )

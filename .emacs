@@ -107,6 +107,7 @@
 (use-package visual-fill-column
   :straight t
   :init
+  (setq-default visual-fill-column-width 80)
   (setq-default visual-fill-column-center-text t)
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
   )

@@ -31,9 +31,13 @@
 ;; nano
 (straight-use-package
  '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
+
+(setq nano-font-family-monospaced "Fira Code")
+(setq nano-font-size 10)
+
 (require 'nano-layout)
-;(require 'nano-theme-light)
-(require 'nano-theme-dark)
+(require 'nano-theme-light)
+;(require 'nano-theme-dark)
 (require 'nano-faces)
 (nano-faces)
 (require 'nano-theme)

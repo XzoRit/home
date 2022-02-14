@@ -44,7 +44,7 @@
 (straight-use-package
  '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
 
-(setq nano-font-family-monospaced "Fira Code")
+(setq nano-font-family-monospaced "JetBrains Mono")
 (setq nano-font-size 10)
 
 (require 'nano-layout)

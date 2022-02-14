@@ -209,12 +209,12 @@
   :commands lsp
   )
 
-;; (use-package ox-reveal
-;;   :straight t
-;;   :config
-;;   (setq org-reveal-root
-;;         xzr:reveal-js-root)
-;;   )
+(use-package ox-reveal
+  :straight t
+  :custom
+  (org-reveal-root xzr:reveal-js-root)
+  (org-reveal-highlight-css "%r/plugin/highlight/monokai.css")
+  )
 
 (use-package flycheck
   :straight t

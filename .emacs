@@ -28,6 +28,18 @@
 ;; use-package
 (straight-use-package 'use-package)
 
+;; variables used in this file
+(defvar xzr:plantuml-jar-path
+  "~/a/b/c/plantuml/plantuml.jar")
+(defvar xzr:reveal-js-root
+  "file:///a/b/c/reveal.js")
+
+;; org
+;; has to be high on top, see here:
+;; https://github.com/org-roam/org-roam/issues/1916
+(straight-use-package 'org)
+(setq org-plantuml-jar-path xzr:plantuml-jar-path)
+
 ;; nano
 (straight-use-package
  '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
@@ -44,12 +56,6 @@
 (nano-theme)
 (require 'nano-defaults)
 (require 'nano-modeline)
-
-;; variables used in this file
-(defvar xzr:plantuml-jar-path
-  "~/a/b/c/plantuml/plantuml.jar")
-(defvar xzr:reveal-js-root
-  "file:///a/b/c/reveal.js")
 
 (tab-bar-mode t)
 (show-paren-mode t)

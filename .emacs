@@ -86,6 +86,15 @@
    )
  )
 
+(defun xzr:colorize-compilation ()
+  "Colorize from `compilation-filter-start' to `point'."
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region
+     compilation-filter-start (point))))
+
+(add-hook 'compilation-filter-hook
+          #'xzr:colorize-compilation)
+
 (use-package hydra
   :straight t
   )

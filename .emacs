@@ -420,44 +420,4 @@ cape:
   (global-set-key (kbd "C-c i") 'xzr:hydra-cape/body)
   )
 
-(use-package popper
-  :straight t
-  :init
-  (defhydra xzr:hydra-popper (:color blue :hint nil)
-    "
-popper:
-    _l_: popper-toggle-latest     _t_: popper-toggle-type
-    _k_: popper-kill-latest-popup _m_: popper-mode
-    _c_: popper-cycle             _e_: popper-echo-mode
-"
-    ("c" popper-cycle :color red)
-    ("l" popper-toggle-latest)
-    ("t" popper-toggle-type)
-    ("k" popper-kill-latest-popup)
-    ("m" popper-mode)
-    ("e" popper-echo-mode)
-    )
-
-  (global-set-key (kbd "C-c o") 'xzr:hydra-popper/body)
-
-  (setq popper-reference-buffers
-        '(
-          "\\*Async Shell Command\\*"
-          "\\*Backtrace\\*"
-          "\\*Flycheck Errors\\*"
-          "\\*Messages\\*"
-          "\\*Warnings\\*"
-          "\\*undo-tree\\*"
-          "\\*xref\\*"
-
-          "Apropos\\*$"
-          "Output\\*$"
-
-          "\\*git-gutter"
-          help-mode))
-  (setq popper-group-function #'popper-group-by-projectile)
-  (popper-mode +1)
-  (popper-echo-mode +1)
-  )
-
 ;;; .emacs ends here

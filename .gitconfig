@@ -2,7 +2,17 @@
 	name = XzoRit
 	email = xzorit@hotmail.com
 [core]
+	autocrlf = input
+    pager = delta
 	excludesfile = $HOME/.gitignore_global
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+[merge]
+    conflictstyle = diff3
+[diff]
+    colorMoved = default
 [push]
 	default = simple
 [color]

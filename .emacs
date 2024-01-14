@@ -222,7 +222,7 @@
   :straight t
   :custom
   (org-reveal-root xzr:reveal-js-root)
-  (org-reveal-highlight-css "%r/plugin/highlight/monokai.css")
+  (org-reveal-highlight-css "%r/plugin/highlight/tomorrow-night-eighties.css")
   )
 
 (use-package flycheck

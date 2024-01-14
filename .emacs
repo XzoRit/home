@@ -356,6 +356,7 @@ purpose:
   (vertico-mode)
   (vertico-mouse-mode)
   (vertico-reverse-mode)
+  (vertico-indexed-mode)
   )
 
 (use-package orderless

@@ -236,7 +236,7 @@
   :straight t
   :custom
   (org-reveal-root xzr:reveal-js-root)
-  (org-reveal-highlight-css "%r/plugin/highlight/monokai.css")
+  (org-reveal-highlight-css "%r/plugin/highlight/tomorrow-night-eighties.css")
   )
 
 (use-package flycheck
@@ -472,5 +472,16 @@ cape
     )
   (global-set-key (kbd "C-c i") 'xzr:hydra-cape/body)
   )
+
+(use-package dashboard
+  :straight t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-banner-logo-title "Dashboard")
+  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-center-content t)
+  (setq dashboard-icon-type 'all-the-icons)
+  (setq dashboard-items '((recents  . 5) (projects . 5)))
+)
 
 ;;; .emacs ends here

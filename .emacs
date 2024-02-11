@@ -19,7 +19,7 @@
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         "https://raw.githubusercontent.com/radian-software/straight.el/master/install.el"
          'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
@@ -32,7 +32,7 @@
 (defvar xzr:plantuml-jar-path
   "~/a/b/c/plantuml/plantuml.jar")
 (defvar xzr:reveal-js-root
-  "file:///a/b/c/reveal.js")
+  "file:////home/<user>/src/reveal.js/")
 
 ;; org
 ;; has to be high on top, see here:
@@ -44,7 +44,7 @@
 (straight-use-package
  '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
 
-(setq nano-font-family-monospaced "JetBrains Mono")
+(setq nano-font-family-monospaced "FiraCode Nerd Font")
 (setq nano-font-size 10)
 
 (require 'nano-layout)
@@ -57,13 +57,18 @@
 (require 'nano-defaults)
 (require 'nano-modeline)
 
+(set-default-coding-systems 'utf-8)
 (tab-bar-mode t)
 (show-paren-mode t)
+(menu-bar-mode -1)
 
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
+
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 ;; C-h shall be delete char backwards
 ;; C-h is replaced with M-?
@@ -86,6 +91,7 @@
    )
  )
 
+(require 'ansi-color)
 (defun xzr:colorize-compilation ()
   "Colorize from `compilation-filter-start' to `point'."
   (let ((inhibit-read-only t))
@@ -94,6 +100,10 @@
 
 (add-hook 'compilation-filter-hook
           #'xzr:colorize-compilation)
+
+(use-package nerd-icons
+  :straight t
+  )
 
 (use-package hydra
   :straight t
@@ -157,6 +167,9 @@
   :config
   (global-undo-tree-mode)
   )
+;; use tmp dir for saving undo-tree history
+(setq undo-tree-history-directory-alist
+      `(("." . ,temporary-file-directory)))
 
 (use-package yaml-mode
   :straight t
@@ -198,6 +211,7 @@
   (setq graphviz-dot-indent-width 4)
   )
 
+(setq lsp-clients-clangd-args '("-j=4" "--background-index" "--clang-tidy" "--completion-style=detailed" "-log=error"))
 (setq lsp-keymap-prefix (kbd "C-c l"))
 (use-package lsp-mode
   :straight t
@@ -282,6 +296,7 @@ Git gutter:
   :straight t
   :config
   (projectile-mode +1)
+  (setq projectile-fd-executable nil)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   )
 
@@ -349,6 +364,7 @@ purpose:
                                     vertico-quick
                                     vertico-repeat
                                     vertico-reverse
+                                    vertico-suspend
                                     vertico-unobtrusive)))
 (use-package vertico
   :straight t
@@ -356,6 +372,7 @@ purpose:
   (vertico-mode)
   (vertico-mouse-mode)
   (vertico-reverse-mode)
+  (vertico-indexed-mode)
   )
 
 (use-package orderless
@@ -370,6 +387,12 @@ purpose:
   :straight t
   :bind
   (("C-." . embark-act))
+  )
+
+(use-package embark-consult
+  :straight t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode)
   )
 
 (use-package marginalia
@@ -395,36 +418,57 @@ purpose:
 
 (use-package corfu
   :straight t
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  (corfu-auto-prefix 2)
+  (corfu-preview-current nil)
+  (corfu-separator ?\s)
   :init
-  (corfu-global-mode)
+  (global-corfu-mode)
+  (corfu-history-mode)
+  (corfu-indexed-mode)
+  )
+
+(use-package nerd-icons-corfu
+  :straight t
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
   )
 
 (use-package cape
   :straight t
   :init
-  (defhydra xzr:hydra-cape (:color red :hint nil)
+  (defhydra xzr:hydra-cape (:color teal :hint nil)
     "
-cape:
-    _k_: cape-keyword _p_: completion-at-point _t_: complete-tag
-    _a_: cape-abbrev  _d_: cape-dabbrev
-    _l_: cape-line    _f_: cape-file
-    _r_: cape-rfc1345 _s_: cape-symbol
-    _w_: cape-dict    _i_: cape-ispell
-    _&_: cape-sgml    _\\_: cape-tex
+cape
+    _a_: cape-abbrev
+    _d_: cape-dabbrev
+    _c_: cape-dict
+    _e_: cape-elisp-block
+    _s_: cape-elisp-symbol
+    _j_: cape-emoji
+    _f_: cape-file
+    _h_: cape-history
+    _k_: cape-keyword
+    _l_: cape-line
+    _r_: cape-rfc1345
+    _g_: cape-sgml
+    _t_: cape-tex
 "
-    ("p" completion-at-point)
-    ("t" complete-tag)
-    ("d" cape-dabbrev)
-    ("f" cape-file)
-    ("k" cape-keyword)
-    ("s" cape-symbol)
     ("a" cape-abbrev)
-    ("i" cape-ispell)
+    ("d" cape-dabbrev)
+    ("c" cape-dict)
+    ("e" cape-elisp-block)
+    ("s" cape-elisp-symbol)
+    ("j" cape-emoji)
+    ("f" cape-file)
+    ("h" cape-history)
+    ("k" cape-keyword)
     ("l" cape-line)
-    ("w" cape-dict)
-    ("\\" cape-tex)
-    ("&" cape-sgml)
     ("r" cape-rfc1345)
+    ("g" cape-sgml)
+    ("t" cape-tex)
     )
   (global-set-key (kbd "C-c i") 'xzr:hydra-cape/body)
   )

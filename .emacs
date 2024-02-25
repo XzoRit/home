@@ -44,23 +44,25 @@
 (straight-use-package
  '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
 
-(setq nano-font-family-monospaced "FiraCode Nerd Font")
-(setq nano-font-size 10)
+(setq nano-font-family-monospaced "FiraMono Nerd Font")
+(setq nano-font-size 11)
 
-(require 'nano-layout)
-(require 'nano-theme-light)
-;(require 'nano-theme-dark)
 (require 'nano-faces)
-(nano-faces)
+(require 'nano-theme-light)
+(require 'nano-theme-dark)
 (require 'nano-theme)
-(nano-theme)
-(require 'nano-defaults)
 (require 'nano-modeline)
+(require 'nano-layout)
+(require 'nano-defaults)
+(nano-faces)
+(nano-theme)
+(nano-modeline)
 
 (set-default-coding-systems 'utf-8)
 (tab-bar-mode t)
 (show-paren-mode t)
 (menu-bar-mode -1)
+(setq delete-old-versions t)
 
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
@@ -91,15 +93,14 @@
    )
  )
 
-(require 'ansi-color)
-(defun xzr:colorize-compilation ()
-  "Colorize from `compilation-filter-start' to `point'."
-  (let ((inhibit-read-only t))
-    (ansi-color-apply-on-region
-     compilation-filter-start (point))))
+(require 'compile)
+(setq compilation-scroll-output t)
+;; mark errors detected by ctest in compilation buffer
+(push 'ctest compilation-error-regexp-alist)
+(push '(ctest "^[0-9]+:\\ \\(/[^(]+\\)(\\([^)]+\\)):\\ \\([^:]+\\):\\ \\(.*\\)" 1 2 nil nil 1) compilation-error-regexp-alist-alist)
 
-(add-hook 'compilation-filter-hook
-          #'xzr:colorize-compilation)
+(require 'ansi-color)
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
 (use-package nerd-icons
   :straight t

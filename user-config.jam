@@ -1,39 +1,15 @@
 using clang
-    : 9
-    : /usr/bin/clang++-9
-    : <cxxflags>-std=c++17
-    ;
-
-using clang
-    : 8
-    : /usr/bin/clang++-8
-    : <cxxflags>-std=c++17
-    ;
-
-using clang
-    : 7
-    : /usr/bin/clang++-7
-    : <cxxflags>-std=c++17
+    : 14
+    : /usr/bin/clang++-14
+    : <cxxflags>-std=c++23
     ;
 
 using gcc
-    : 9
-    : /usr/bin/g++-9
-    : <cxxflags>-std=c++17
-    ;
-
-using gcc
-    : 8
-    : /usr/bin/g++-8
-    : <cxxflags>-std=c++17
-    ;
-
-using gcc
-    : 7
-    : /usr/bin/g++-7
-    : <cxxflags>-std=c++17
+    : 13
+    : /usr/bin/g++-13
+    : <cxxflags>-std=c++23
     ;
 
 using boost
-    : 1.72
+    : 1.84
     ;

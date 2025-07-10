@@ -1,0 +1,18 @@
+* create repo on ds
+- https://kb.synology.com/en-global/DSM/help/Git/git?version=7
+#+begin_src
+ssh tobi@ds223j -p 22
+cd /volume1/git_repos
+mkdir <new-repo>.git
+cd <new-repo>.git
+git init --bare
+#+end_src
+** clone that repo locally
+#+begin_src
+git clone ssh://tobi@ds223j:/volume1/git_repos/<new-repo>.git
+#+end_src
+** or set remote repo on local repo
+#+begin_src
+git remote add ds ssh://tobi@ds223j:/volume1/git_repos/<new-repo>.git
+git push ds main
+#+end_src
